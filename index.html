@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SONO Ejendomme ApS</title>
+<meta name="description" content="SONO Ejendomme ApS udvikler, bygger og administrerer bolig- og erhvervsejendomme i Danmark." />
+<link rel="icon" type="image/png" href="sono-symbol-moss.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #F4F2ED;
+    --paper-2: #EDEAE3;
+    --moss: #2A3B31;
+    --ink: #3A3A36;
+    --grey: #6E6E68;
+    --grey-light: #8C8C85;
+    --gutter: clamp(20px, 5vw, 72px);
+    --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: 'Instrument Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 17px; line-height: 1.5; -webkit-font-smoothing: antialiased; overflow-x: clip;
+  }
+  a { color: inherit; text-decoration: none; }
+  a:hover { opacity: 0.65; }
+  ::selection { background: var(--moss); color: var(--paper); }
+  img { display: block; }
+  h1, h2 { margin: 0; font-weight: 400; letter-spacing: -0.022em; text-wrap: pretty; }
+  .label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--grey-light); }
+  .wrap { max-width: 1280px; margin: 0 auto; }
+
+  /* header */
+  .site-header { position: sticky; top: 0; z-index: 60; height: 88px; }
+  .site-header .bar {
+    position: absolute; inset: 0; background: var(--moss);
+    border-bottom: 1px solid rgba(244,242,237,0.14);
+    opacity: 0; transition: opacity 0.45s cubic-bezier(0.22,0.61,0.36,1); pointer-events: none;
+  }
+  .site-header.is-scrolled .bar { opacity: 1; }
+  .site-header .row { position: relative; height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 0 var(--gutter); }
+  .site-header img { height: clamp(20px, 2.2vw, 26px); width: auto; }
+  nav { display: flex; align-items: center; gap: clamp(18px, 3vw, 44px); font-family: var(--mono); font-size: 11px; letter-spacing: 0.17em; text-transform: uppercase; color: var(--paper); }
+  nav .links { display: flex; align-items: center; gap: clamp(18px, 3vw, 44px); }
+  nav .links a { opacity: 0.85; }
+  nav .links a:hover { opacity: 1; }
+  .lang { display: flex; align-items: center; gap: 9px; padding-left: clamp(4px, 1.5vw, 20px); }
+  .lang button { appearance: none; background: none; border: 0; padding: 0; font: inherit; letter-spacing: inherit; text-transform: uppercase; color: var(--paper); opacity: 0.45; cursor: pointer; }
+  .lang button[aria-pressed="true"] { opacity: 1; }
+  .lang .sep { opacity: 0.4; }
+
+  /* hero */
+  .hero {
+    position: relative; height: 100svh; min-height: 560px; margin-top: -88px;
+    background: var(--moss); overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 88px var(--gutter) 0;
+  }
+  .hero .clips { position: absolute; inset: 0; overflow: hidden; background: var(--moss); }
+  .hero video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+    opacity: 0; transition: opacity 0.9s cubic-bezier(0.4,0,0.4,1);
+    transform: translateZ(0); will-change: opacity; backface-visibility: hidden; pointer-events: none;
+  }
+  .hero video.is-live { opacity: 1; }
+  .hero .scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,22,26,0.52) 0%, rgba(20,22,26,0.38) 34%, rgba(20,22,26,0.34) 62%, rgba(20,22,26,0.46) 100%); }
+  .hero .vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 64% 48% at 50% 50%, rgba(20,22,26,0.62) 0%, rgba(20,22,26,0.40) 56%, rgba(20,22,26,0) 100%); }
+  .hero h1 {
+    position: relative; max-width: 17ch; text-align: center; color: var(--paper);
+    font-size: clamp(26px, 3.6vw, 50px); line-height: 1.16;
+    animation: rise 1.1s cubic-bezier(0.22,0.61,0.36,1) both;
+  }
+  .hero .cue {
+    position: absolute; left: 0; right: 0; bottom: 34px; width: fit-content; margin: 0 auto;
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--paper);
+    animation: cue 2.6s ease-in-out infinite;
+  }
+  .hero .cue span:last-child { font-size: 12px; letter-spacing: 0; }
+  @keyframes cue { 0%, 100% { transform: translateY(0); opacity: 0.75; } 50% { transform: translateY(5px); opacity: 1; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* about */
+  .about { padding: clamp(80px, 12vh, 150px) var(--gutter) clamp(72px, 10vh, 130px); }
+  .about .wrap { display: flex; flex-wrap: wrap; gap: clamp(28px, 5vw, 80px); }
+  .about .side { flex: 0 0 clamp(140px, 16vw, 220px); padding-top: 8px; }
+  .about .body { flex: 1 1 460px; min-width: 0; display: flex; flex-direction: column; gap: clamp(24px, 3vw, 38px); }
+  .about h2 { max-width: 26ch; font-size: clamp(26px, 3.2vw, 44px); line-height: 1.18; color: var(--moss); }
+  .about .prose { display: flex; flex-direction: column; gap: 20px; max-width: 62ch; font-size: clamp(16px, 1.15vw, 18px); line-height: 1.7; }
+  .about .prose p { margin: 0; }
+  .disciplines { display: flex; flex-wrap: wrap; gap: clamp(24px, 3vw, 48px); margin-top: clamp(12px, 2vw, 28px); }
+  .disciplines > div { flex: 1 1 200px; min-width: 0; border-top: 1px solid rgba(42,59,49,0.18); padding-top: 18px; display: flex; flex-direction: column; gap: 9px; }
+  .disciplines .n { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--grey-light); }
+  .disciplines h3 { margin: 0; font-size: 17px; font-weight: 500; color: var(--moss); letter-spacing: -0.01em; }
+  .disciplines p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--grey); }
+
+  /* projects */
+  .projects { padding: clamp(72px, 10vh, 130px) 0 clamp(80px, 12vh, 140px); background: var(--paper-2); border-top: 1px solid rgba(42,59,49,0.10); }
+  .projects .head { padding: 0 var(--gutter); display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 28px; }
+  .projects .head .txt { display: flex; flex-direction: column; gap: clamp(16px, 2vw, 26px); max-width: 640px; }
+  .projects h2 { font-size: clamp(24px, 2.8vw, 38px); line-height: 1.2; color: var(--moss); }
+  .arrows { display: flex; gap: 10px; }
+  .arrows button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(42,59,49,0.28); background: none; color: var(--moss); font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, color 0.2s, border-color 0.2s; }
+  .arrows button:hover { background: var(--moss); color: var(--paper-2); border-color: var(--moss); }
+  .rail { margin-top: clamp(32px, 5vh, 56px); display: flex; gap: clamp(14px, 1.6vw, 24px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 0 var(--gutter) 20px; }
+  .rail::-webkit-scrollbar { height: 2px; }
+  .rail::-webkit-scrollbar-thumb { background: rgba(42,59,49,0.25); }
+  .card { position: relative; flex: 0 0 max(272px, calc((100% - 24px) / 2)); scroll-snap-align: start; background: #E7E3D9; overflow: hidden; cursor: pointer; outline-offset: 3px; }
+  .card .shot { position: relative; aspect-ratio: 4 / 3; background: #F1EEE7; overflow: hidden; }
+  .card .shot .hatch { position: absolute; inset: 0; opacity: 0.55; background: repeating-linear-gradient(135deg, #E4E0D6 0, #E4E0D6 7px, #DCD7CB 7px, #DCD7CB 14px); }
+  .card .soon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+  .card .soon > span {
+    display: flex; align-items: center; gap: 10px; padding: 9px 16px;
+    border: 1px solid rgba(42,59,49,0.22); background: rgba(244,242,237,0.86);
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--moss);
+  }
+  .card .soon .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--moss); opacity: 0.5; }
+  .card .meta { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 22px 26px; }
+  .card .meta .addr { font-size: clamp(16px, 1.3vw, 19px); font-weight: 500; color: var(--moss); letter-spacing: -0.012em; }
+  .card .meta .city { font-size: 14px; color: var(--grey); margin-top: 4px; }
+  .card .meta .sign { font-family: var(--mono); font-size: 15px; line-height: 1.2; color: var(--moss); opacity: 0.45; }
+  .card .back {
+    position: absolute; inset: 0; background: var(--moss); color: var(--paper);
+    display: flex; flex-direction: column; justify-content: space-between; gap: 22px; padding: clamp(20px, 2vw, 28px);
+    transform: translateY(101%); transition: transform 0.55s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .card[aria-expanded="true"] .back { transform: translateY(0); }
+  .card .back .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .card .back .addr { font-size: clamp(16px, 1.3vw, 19px); font-weight: 500; letter-spacing: -0.012em; }
+  .card .back .city { font-size: 14px; opacity: 0.6; margin-top: 4px; }
+  .card .back .sign { font-family: var(--mono); font-size: 15px; line-height: 1.2; opacity: 0.6; }
+  .card .facts { display: flex; flex-direction: column; gap: 11px; }
+  .card .facts .k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.5; }
+  .card .facts .fr { display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid rgba(244,242,237,0.18); padding-top: 9px; font-size: 14.5px; }
+  .card .facts .fr > span:first-child { opacity: 0.62; }
+  .card .back .more { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; opacity: 0.75; }
+  .card .back .more a { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(244,242,237,0.45); }
+  .projects .hint { padding: 0 var(--gutter); font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--grey-light); }
+
+  /* partners */
+  .partners { padding: clamp(72px, 10vh, 130px) 0 clamp(80px, 12vh, 140px); background: var(--paper); border-top: 1px solid rgba(42,59,49,0.10); overflow: hidden; }
+  .partners .head { padding: 0 var(--gutter); display: flex; flex-wrap: wrap; gap: clamp(28px, 5vw, 80px); }
+  .partners .side { flex: 0 0 clamp(140px, 16vw, 220px); padding-top: 8px; }
+  .partners .body { flex: 1 1 460px; min-width: 0; }
+  .partners h2 { max-width: 28ch; font-size: clamp(24px, 2.8vw, 38px); line-height: 1.2; color: var(--moss); }
+  .marquee {
+    margin-top: clamp(40px, 6vh, 72px); position: relative; width: 100%; overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
+  }
+  .marquee .track { display: flex; width: max-content; animation: marquee 60s linear infinite; }
+  .marquee .set { display: flex; align-items: center; gap: clamp(56px, 8vw, 120px); padding-right: clamp(56px, 8vw, 120px); }
+  .marquee img { width: auto; object-fit: contain; flex: 0 0 auto; }
+  .marquee .l-nordea, .marquee .l-guldager { height: clamp(30px, 3.4vw, 44px); }
+  .marquee .l-may, .marquee .l-frame { height: clamp(38px, 4.4vw, 58px); }
+  .marquee .l-edelbo { height: clamp(42px, 4.8vw, 62px); }
+  .marquee .l-murer { height: clamp(36px, 4.2vw, 55px); }
+  .marquee .l-ussing { height: clamp(40px, 4.6vw, 60px); }
+  .marquee .l-rjs { height: clamp(34px, 3.9vw, 50px); }
+  .marquee .l-rothco { height: clamp(46px, 5.2vw, 68px); }
+  .marquee .l-may, .marquee .l-edelbo, .marquee .l-ussing { border-radius: 6px; }
+
+  /* contact */
+  .contact { background: var(--moss); color: var(--paper); padding: clamp(80px, 12vh, 140px) var(--gutter) 40px; }
+  .contact .wrap { display: flex; flex-direction: column; gap: clamp(48px, 8vh, 96px); }
+  .contact .top { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: clamp(40px, 6vw, 80px); }
+  .contact .brand { flex: 0 0 auto; display: flex; flex-direction: column; gap: 22px; }
+  .contact .brand img { height: clamp(30px, 3.4vw, 42px); width: auto; }
+  .contact .brand .label { color: var(--paper); opacity: 0.5; }
+  .contact .details { flex: 1 1 520px; min-width: 0; display: flex; flex-wrap: wrap; gap: clamp(28px, 4vw, 64px) clamp(32px, 5vw, 72px); }
+  .contact .details > div { flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+  .contact .details .k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.48; }
+  .contact .details .v { font-size: 16px; line-height: 1.55; }
+  .contact .details a.v { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; text-decoration-color: rgba(244,242,237,0.4); }
+  .contact .details a.v:hover { opacity: 1; text-decoration-color: rgba(244,242,237,1); }
+  .contact .legal { border-top: 1px solid rgba(244,242,237,0.16); padding-top: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.55; }
+
+  [data-lang]:not([data-lang-active]) { display: none !important; }
+
+  @media (max-width: 640px) {
+    .site-header, .hero { --gutter: 20px; }
+    nav .links { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body id="top">
+
+<header class="site-header">
+  <div class="bar"></div>
+  <div class="row">
+    <a href="#top" aria-label="SONO Ejendomme"><img src="sono-lockup-paper.png" alt="SONO" /></a>
+    <nav>
+      <div class="links">
+        <a href="#om"><span data-lang="da" data-lang-active>Om os</span><span data-lang="en">About</span></a>
+        <a href="#projekter"><span data-lang="da" data-lang-active>Projekter</span><span data-lang="en">Projects</span></a>
+        <a href="#partnere"><span data-lang="da" data-lang-active>Partnere</span><span data-lang="en">Partners</span></a>
+        <a href="#kontakt"><span data-lang="da" data-lang-active>Kontakt</span><span data-lang="en">Contact</span></a>
+      </div>
+      <div class="lang">
+        <button type="button" data-set-lang="da" aria-pressed="true">DA</button>
+        <span class="sep">/</span>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="clips" id="clips">
+    <video src="hero-1-construction.mp4" muted playsinline preload="auto"></video>
+    <video src="hero-2-mark.mp4" muted playsinline preload="metadata"></video>
+    <video src="hero-3-arkitekt.mp4" muted playsinline preload="metadata"></video>
+    <video src="hero-4-hav.mp4" muted playsinline preload="metadata"></video>
+    <video src="hero-5-fredericia.mp4" muted playsinline preload="metadata"></video>
+  </div>
+  <div class="scrim"></div>
+  <div class="vignette"></div>
+  <h1>
+    <span data-lang="da" data-lang-active>Vi udvikler, bygger og administrerer ejendomme med en positiv indvirkning på samfundet.</span>
+    <span data-lang="en">We develop, build and manage properties with a positive impact on society.</span>
+  </h1>
+  <a class="cue" href="#om"><span>Scroll</span><span>↓</span></a>
+</section>
+
+<section class="about" id="om">
+  <div class="wrap">
+    <div class="side label"><span data-lang="da" data-lang-active>01 — Om os</span><span data-lang="en">01 — About us</span></div>
+    <div class="body">
+      <h2>
+        <span data-lang="da" data-lang-active>Langsigtet ejerskab, egen udvikling og drift i eget hus.</span>
+        <span data-lang="en">Long-term ownership, our own development, management in-house.</span>
+      </h2>
+      <div class="prose" data-lang="da" data-lang-active>
+        <p>SONO Ejendomme ApS er et dansk ejendomsselskab med base i Fredericia. Siden 2004 har vi investeret i, udviklet og opført bolig- og erhvervsejendomme.</p>
+        <p>Vi investerer for egen regning og med et langsigtet perspektiv. Det giver os frihed til at fokusere på det enkelte projekts kvalitet og udvikling frem for kortsigtede afkast. Vi arbejder med en grundig og langsigtet tilgang til ejendomsudvikling, hvor arkitektur, funktionalitet, kvalitet og bæredygtighed går hånd i hånd.</p>
+        <p>Vi tilstræber at skabe ejendomme, der holder – både økonomisk, arkitektonisk og i deres anvendelse. Derfor udvælger vi vores projekter med omhu og involverer os aktivt gennem hele processen fra idé og udvikling til opførelse og ejerskab.</p>
+      </div>
+      <div class="prose" data-lang="en">
+        <p>SONO Ejendomme ApS is a Danish property company based in Fredericia. Since 2004 we have invested in, developed and built residential and commercial property.</p>
+        <p>We invest our own capital with a long-term perspective. That gives us the freedom to focus on the quality and development of each individual project rather than short-term returns. We take a thorough, long-term approach to property development, where architecture, functionality, quality and sustainability go hand in hand.</p>
+        <p>We aim to create properties that last — financially, architecturally and in how they are used. That is why we select our projects with care and stay actively involved through the entire process, from idea and development to construction and ownership.</p>
+      </div>
+      <div class="disciplines">
+        <div>
+          <div class="n">01</div>
+          <h3><span data-lang="da" data-lang-active>Udvikling</span><span data-lang="en">Development</span></h3>
+          <p data-lang="da" data-lang-active>Fra grund og idé gennem myndighedsbehandling til færdigt projekt.</p>
+          <p data-lang="en">From site and idea through planning approval to a finished project.</p>
+        </div>
+        <div>
+          <div class="n">02</div>
+          <h3><span data-lang="da" data-lang-active>Byggeri</span><span data-lang="en">Construction</span></h3>
+          <p data-lang="da" data-lang-active>Vi opfører selv og følger byggeriet hele vejen til nøgleoverdragelse.</p>
+          <p data-lang="en">We build ourselves and stay with the project all the way to handover.</p>
+        </div>
+        <div>
+          <div class="n">03</div>
+          <h3><span data-lang="da" data-lang-active>Administration</span><span data-lang="en">Management</span></h3>
+          <p data-lang="da" data-lang-active>Vi driver og vedligeholder vores egne ejendomme.</p>
+          <p data-lang="en">We operate and maintain the properties we own. Operations are part of the investment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="projects" id="projekter">
+  <div class="head wrap">
+    <div class="txt">
+      <div class="label"><span data-lang="da" data-lang-active>02 — Projekter</span><span data-lang="en">02 — Projects</span></div>
+      <h2>
+        <span data-lang="da" data-lang-active>Seneste projekter</span>
+        <span data-lang="en">Latest projects</span>
+      </h2>
+    </div>
+    <div class="arrows">
+      <button type="button" data-rail="-1" aria-label="Forrige">←</button>
+      <button type="button" data-rail="1" aria-label="Næste">→</button>
+    </div>
+  </div>
+
+  <div class="rail" id="rail">
+    <div class="card" role="button" tabindex="0" aria-expanded="false">
+      <div class="shot">
+        <div class="hatch"></div>
+        <div class="soon"><span><span class="dot"></span><span data-lang="da" data-lang-active>Kommer snart</span><span data-lang="en">Coming soon</span></span></div>
+      </div>
+      <div class="meta">
+        <div><div class="addr">Krogsaervej 2</div><div class="city">7000 Fredericia</div></div>
+        <div class="sign">+</div>
+      </div>
+      <div class="back">
+        <div class="top">
+          <div><div class="addr">Krogsaervej 2</div><div class="city">7000 Fredericia</div></div>
+          <div class="sign">×</div>
+        </div>
+        <div class="facts">
+          <div class="k"><span data-lang="da" data-lang-active>Nøgletal</span><span data-lang="en">Key figures</span></div>
+          <div class="fr"><span>Type</span><span>—</span></div>
+          <div class="fr"><span><span data-lang="da" data-lang-active>Areal</span><span data-lang="en">Area</span></span><span>—</span></div>
+          <div class="fr"><span><span data-lang="da" data-lang-active>Opført</span><span data-lang="en">Built</span></span><span>—</span></div>
+        </div>
+        <div class="more"><a href="mailto:kontakt@sonoejendomme.dk">kontakt@sonoejendomme.dk</a></div>
+      </div>
+    </div>
+
+    <div class="card" role="button" tabindex="0" aria-expanded="false">
+      <div class="shot">
+        <div class="hatch"></div>
+        <div class="soon"><span><span class="dot"></span><span data-lang="da" data-lang-active>Kommer snart</span><span data-lang="en">Coming soon</span></span></div>
+      </div>
+      <div class="meta">
+        <div><div class="addr">Hortensiavej 16</div><div class="city">1857 Frederiksberg C</div></div>
+        <div class="sign">+</div>
+      </div>
+      <div class="back">
+        <div class="top">
+          <div><div class="addr">Hortensiavej 16</div><div class="city">1857 Frederiksberg C</div></div>
+          <div class="sign">×</div>
+        </div>
+        <div class="facts">
+          <div class="k"><span data-lang="da" data-lang-active>Nøgletal</span><span data-lang="en">Key figures</span></div>
+          <div class="fr"><span>Type</span><span>—</span></div>
+          <div class="fr"><span><span data-lang="da" data-lang-active>Areal</span><span data-lang="en">Area</span></span><span>—</span></div>
+          <div class="fr"><span><span data-lang="da" data-lang-active>Opført</span><span data-lang="en">Built</span></span><span>—</span></div>
+        </div>
+        <div class="more"><a href="mailto:kontakt@sonoejendomme.dk">kontakt@sonoejendomme.dk</a></div>
+      </div>
+    </div>
+
+    <div class="card" role="button" tabindex="0" aria-expanded="false">
+      <div class="shot">
+        <div class="hatch"></div>
+        <div class="soon"><span><span class="dot"></span><span data-lang="da" data-lang-active>Kommer snart</span><span data-lang="en">Coming soon</span></span></div>
+      </div>
+      <div class="meta">
+        <div><div class="addr">Jyllandsgade 19</div><div class="city">7000 Fredericia</div></div>
+        <div class="sign">+</div>
+      </div>
+      <div class="back">
+        <div class="top">
+          <div><div class="addr">Jyllandsgade 19</div><div class="city">7000 Fredericia</div></div>
+          <div class="sign">×</div>
+        </div>
+        <div class="facts">
+          <div class="k"><span data-lang="da" data-lang-active>Nøgletal</span><span data-lang="en">Key figures</span></div>
+          <div class="fr"><span>Type</span><span>—</span></div>
+          <div class="fr"><span><span data-lang="da" data-lang-active>Areal</span><span data-lang="en">Area</span></span><span>—</span></div>
+          <div class="fr"><span><span data-lang="da" data-lang-active>Opført</span><span data-lang="en">Built</span></span><span>—</span></div>
+        </div>
+        <div class="more"><a href="mailto:kontakt@sonoejendomme.dk">kontakt@sonoejendomme.dk</a></div>
+      </div>
+    </div>
+
+    <div class="card" role="button" tabindex="0" aria-expanded="false">
+      <div class="shot">
+        <div class="hatch"></div>
+        <div class="soon"><span><span class="dot"></span><span data-lang="da" data-lang-active>Kommer snart</span><span data-lang="en">Coming soon</span></span></div>
+      </div>
+      <div class="meta">
+        <div><div class="addr">Kløvervej 19</div><div class="city">7000 Fredericia</div></div>
+        <div class="sign">+</div>
+      </div>
+      <div class="back">
+        <div class="top">
+          <div><div class="addr">Kløvervej 19</div><div class="city">7000 Fredericia</div></div>
+          <div class="sign">×</div>
+        </div>
+        <div class="facts">
+          <div class="k"><span data-lang="da" data-lang-active>Nøgletal</span><span data-lang="en">Key figures</span></div>
+          <div class="fr"><span>Type</span><span>—</span></div>
+          <div class="fr"><span><span data-lang="da" data-lang-active>Areal</span><span data-lang="en">Area</span></span><span>—</span></div>
+          <div class="fr"><span><span data-lang="da" data-lang-active>Opført</span><span data-lang="en">Built</span></span><span>—</span></div>
+        </div>
+        <div class="more"><a href="mailto:kontakt@sonoejendomme.dk">kontakt@sonoejendomme.dk</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hint wrap"><span data-lang="da" data-lang-active>Fire projekter · klik for detaljer</span><span data-lang="en">Four projects · click for details</span></div>
+</section>
+
+<section class="partners" id="partnere">
+  <div class="head wrap">
+    <div class="side label"><span data-lang="da" data-lang-active>03 — Samarbejdspartnere</span><span data-lang="en">03 — Partners</span></div>
+    <div class="body">
+      <h2>
+        <span data-lang="da" data-lang-active>Udvalgte rådgivere og samarbejdspartnere</span>
+        <span data-lang="en">Selected advisers and partners</span>
+      </h2>
+    </div>
+  </div>
+  <div class="marquee">
+    <div class="track">
+      <div class="set">
+        <img class="l-nordea" src="nordea.png" alt="Nordea" />
+        <img class="l-may" src="may.png" alt="MAY Law Firm" />
+        <img class="l-edelbo" src="edelbo.webp" alt="Revisionsfirmaet Edelbo" />
+        <img class="l-murer" src="murermester-aabo.png" alt="Murermester Rune Aabo Larsen" />
+        <img class="l-ussing" src="ussing.png" alt="R.A. Ussing &amp; Søn A/S" />
+        <img class="l-frame" src="frame-studio.png" alt="Frame Studio" />
+        <img class="l-rjs" src="rjs-anlaeg.png" alt="RJS Anlæg ApS" />
+        <img class="l-rothco" src="rothco.png" alt="Rothco Byg &amp; Anlæg" />
+        <img class="l-guldager" src="guldager.png" alt="Guldager" />
+      </div>
+      <div class="set" aria-hidden="true">
+        <img class="l-nordea" src="nordea.png" alt="" />
+        <img class="l-may" src="may.png" alt="" />
+        <img class="l-edelbo" src="edelbo.webp" alt="" />
+        <img class="l-murer" src="murermester-aabo.png" alt="" />
+        <img class="l-ussing" src="ussing.png" alt="" />
+        <img class="l-frame" src="frame-studio.png" alt="" />
+        <img class="l-rjs" src="rjs-anlaeg.png" alt="" />
+        <img class="l-rothco" src="rothco.png" alt="" />
+        <img class="l-guldager" src="guldager.png" alt="" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="kontakt">
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <img src="sono-lockup-paper.png" alt="SONO Ejendomme" />
+        <div class="label"><span data-lang="da" data-lang-active>04 — Kontakt</span><span data-lang="en">04 — Contact</span></div>
+      </div>
+      <div class="details">
+        <div>
+          <div class="k"><span data-lang="da" data-lang-active>Postadresse</span><span data-lang="en">Postal address</span></div>
+          <div class="v">C/O Ocean7, Vendersgade 50, 7000 Fredericia</div>
+        </div>
+        <div>
+          <div class="k"><span data-lang="da" data-lang-active>Besøgsadresse</span><span data-lang="en">Visiting address</span></div>
+          <div class="v">C/O Ocean7, Vendersgade 50, 7000 Fredericia</div>
+        </div>
+        <div>
+          <div class="k">CVR</div>
+          <div class="v">28132980</div>
+        </div>
+        <div>
+          <div class="k">E-mail</div>
+          <a class="v" href="mailto:kontakt@sonoejendomme.dk">kontakt@sonoejendomme.dk</a>
+        </div>
+      </div>
+    </div>
+    <div class="legal">
+      <div>© 2026 SONO Ejendomme ApS · CVR 28132980</div>
+      <a href="#top"><span data-lang="da" data-lang-active>Til toppen ↑</span><span data-lang="en">Back to top ↑</span></a>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    /* sticky header bar */
+    var header = document.querySelector('.site-header');
+    var onScroll = function () { header.classList.toggle('is-scrolled', window.scrollY > 60); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* language */
+    document.querySelectorAll('[data-set-lang]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var lang = btn.getAttribute('data-set-lang');
+        document.documentElement.setAttribute('lang', lang);
+        document.querySelectorAll('[data-lang]').forEach(function (el) {
+          if (el.getAttribute('data-lang') === lang) el.setAttribute('data-lang-active', '');
+          else el.removeAttribute('data-lang-active');
+        });
+        document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+          b.setAttribute('aria-pressed', String(b.getAttribute('data-set-lang') === lang));
+        });
+      });
+    });
+
+    /* hero clips: crossfade, starting the next clip before the current one ends */
+    var clips = Array.prototype.slice.call(document.querySelectorAll('#clips video'));
+    var current = -1, cleanup;
+
+    function warm(i) {
+      var el = clips[i];
+      if (!el || el.dataset.warm === '1') return;
+      el.dataset.warm = '1';
+      el.preload = 'auto';
+      try { el.load(); } catch (e) {}
+      var ready = function () {
+        if (i === current) return;
+        el.currentTime = 0;
+        var p = el.play();
+        if (p && p.then) p.then(function () {
+          if (i !== current) { el.pause(); el.currentTime = 0; }
+        }).catch(function () {});
+      };
+      if (el.readyState >= 3) ready();
+      else el.addEventListener('canplaythrough', ready, { once: true });
+    }
+
+    function show(i) {
+      if (i === current) return;
+      current = i;
+      clips.forEach(function (v, n) { v.classList.toggle('is-live', n === i); });
+      var el = clips[i];
+      if (el) {
+        if (el.currentTime > 0.05) el.currentTime = 0;
+        var p = el.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+      warm((i + 1) % clips.length);
+      clearTimeout(cleanup);
+      cleanup = setTimeout(function () {
+        clips.forEach(function (v, n) { if (n !== current) { v.pause(); v.currentTime = 0; } });
+      }, 1900);
+    }
+
+    clips.forEach(function (el, i) {
+      el.muted = true;
+      el.addEventListener('ended', function () {
+        if (i === current) show((i + 1) % clips.length);
+      });
+      el.addEventListener('timeupdate', function () {
+        if (i !== current) return;
+        if (!el.duration || !isFinite(el.duration)) return;
+        var lead = Math.min(1.25, el.duration * 0.25);
+        if (el.duration - el.currentTime <= lead) show((i + 1) % clips.length);
+      });
+    });
+    show(0);
+
+    /* project cards */
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.card'));
+    cards.forEach(function (card) {
+      var toggle = function () {
+        var open = card.getAttribute('aria-expanded') === 'true';
+        cards.forEach(function (c) { c.setAttribute('aria-expanded', 'false'); });
+        card.setAttribute('aria-expanded', open ? 'false' : 'true');
+      };
+      card.addEventListener('click', function (e) { if (!e.target.closest('a')) toggle(); });
+      card.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+      });
+    });
+
+    /* rail arrows */
+    var rail = document.getElementById('rail');
+    document.querySelectorAll('[data-rail]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = rail.firstElementChild;
+        var step = (card ? card.getBoundingClientRect().width : 300) + 20;
+        rail.scrollBy({ left: parseInt(btn.getAttribute('data-rail'), 10) * step, behavior: 'smooth' });
+      });
+    });
+  })();
+</script>
+</body>
+</html>
